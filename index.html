@@ -76,7 +76,7 @@
                 const shushoujou  = "症状 :" + $('input[name="shushoujou"]').val();
                 const keika  = "経過 :" + $('input[name="keika"]').val();
                 const hatunetu = "発熱 :" + $('input[name="hatunetu"]').val();
-                const msg = `${name}\n${bangou}\n${shushoujou}\n${keika}\n${hatunetu}`;
+                const msg = "問診結果\n"+`${name}\n${bangou}\n${shushoujou}\n${keika}\n${hatunetu}`;
                 sendText(msg);
                 return false;
             });
