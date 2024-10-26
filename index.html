@@ -71,11 +71,11 @@
 
         $(function () {
             $('form').submit(function () {
-                const name    = $('input[name="name"]').val();
-                const bangou = $('input[name="bangou"]').val();
-                const shushoujou  = $('input[name="shushoujou"]').val();
-                const keika  = $('input[name="keika"]').val();
-                const hatunetu = $('input[name="hatunetu"]').val();
+                const name    = "名前 :" + $('input[name="name"]').val();
+                const bangou = "番号 :" + $('input[name="bangou"]').val();
+                const shushoujou  = "症状 :" + $('input[name="shushoujou"]').val();
+                const keika  = "経過 :" + $('input[name="keika"]').val();
+                const hatunetu = "発熱 :" + $('input[name="hatunetu"]').val();
                 const msg = `${name}\n${bangou}\n${shushoujou}\n${keika}\n${hatunetu}`;
                 sendText(msg);
                 return false;
