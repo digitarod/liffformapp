@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>質問フォーム</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    #question {
+      width: 100%;
+      height: 100px;
+    }
+    #answerLabel {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>質問フォーム</h2>
+  <textarea id="question" placeholder="質問を入力してください"></textarea>
+  <br><br>
+  <button onclick="submitQuestion()">回答を取得</button>
+  <br><br>
+  <label id="answerLabel">回答がここに表示されます</label>
+
+  <script>
+    async function submitQuestion() {
+      const question = document.getElementById("question").value;
+      const response = await fetch('YOUR_GAS_WEB_APP_URL', {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question })
+      });
+      const answer = await response.text();
+      document.getElementById("answerLabel").innerText = answer;
+    }
+  </script>
+</body>
+</html>
