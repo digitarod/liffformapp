@@ -1,80 +1,45 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>質問フォーム - Gemini対応</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-    }
-    #question {
-      width: 100%;
-      height: 100px;
-    }
-    #answerLabel {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>診断をします</title>
+    <script>
+        async function sendQuestion() {
+            const question = document.getElementById("question").value;
+            const responseDisplay = document.getElementById("response");
+
+            if (!question.trim()) {
+                responseDisplay.textContent = "質問を入力してください。";
+                return;
+            }
+
+            responseDisplay.textContent = "応答を待っています...";
+
+            try {
+                const response = await fetch("chat.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ question })
+                });
+
+                const result = await response.json();
+                responseDisplay.textContent = result.reply ?? "応答がありません。";
+            } catch (error) {
+                responseDisplay.textContent = "エラー: " + error.message;
+            }
+        }
+    </script>
 </head>
 <body>
-  <h2>質問フォーム</h2>
-  <textarea id="question" placeholder="質問を入力してください"></textarea>
-  <br><br>
-  <button onclick="submitQuestion()">回答を取得</button>
-  <br><br>
-  <label id="answerLabel">回答がここに表示されます</label>
+    <h2>Google Gemini AI Chat</h2>
+    <label for="question">質問を入力してください:</label><br>
+    <textarea id="question" rows="4" cols="50" required></textarea><br><br>
+    <button onclick="sendQuestion()">送信</button>
 
-  <script>
-    async function submitQuestion() {
-      const question = document.getElementById("question").value.trim();
-      if (!question) {
-        document.getElementById("answerLabel").innerText = "質問を入力してください。";
-        return;
-      }
-
-      const apiKey = "YOUR_API"; // Google GeminiのAPIキーに置き換えてください
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
-
-      // Gemini APIのリクエストペイロードの作成
-      const payload = {
-        "contents": [{
-          "parts": [{
-            "text": question
-          }]
-        }]
-      };
-
-      // APIへのリクエスト
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        });
-
-        if (response.ok) {
-          const jsonResponse = await response.json();
-
-          if (jsonResponse && jsonResponse.candidates && jsonResponse.candidates.length > 0) {
-            const answerText = jsonResponse.candidates[0].content.parts[0].text;
-            document.getElementById("answerLabel").innerText = answerText;
-          } else {
-            document.getElementById("answerLabel").innerText = "調子が悪いです。。。";
-          }
-        } else {
-          document.getElementById("answerLabel").innerText = "エラーが発生しました。";
-        }
-      } catch (error) {
-        console.error("APIリクエストエラー:", error);
-        document.getElementById("answerLabel").innerText = "エラーが発生しました。";
-      }
-    }
-  </script>
+    <h3>応答:</h3>
+    <p id="response"></p>
 </body>
 </html>
