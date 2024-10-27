@@ -36,31 +36,37 @@
         return;
       }
 
-      const apiKey = "AIzaSyCnDAcNNFww_JVe-UZLCukIe2LXOSsDL7U"; // ここにGoogle GeminiのAPIキーを入力してください
-      const apiUrl = "https://api.google.com/gemini/v1/ask"; // 実際のGemini APIのエンドポイントに置き換えてください
+      const apiKey = "17RCF_UOIGK5WYrnnFkjWN9qkCA0c9yG-Uo20LBRfB34"; // Google GeminiのAPIキーに置き換えてください
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
-      // APIリクエストの構築
-      const requestData = {
-        prompt: question,
-        max_tokens: 100  // 回答のトークン数を指定します。必要に応じて調整してください。
+      // Gemini APIのリクエストペイロードの作成
+      const payload = {
+        "contents": [{
+          "parts": [{
+            "text": question
+          }]
+        }]
       };
 
-      // APIへのリクエストを送信
+      // APIへのリクエスト
       try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(url, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify(requestData)
+          body: JSON.stringify(payload)
         });
 
-        // レスポンスの解析
         if (response.ok) {
-          const data = await response.json();
-          const answer = data.choices[0].message || "回答を取得できませんでした。";
-          document.getElementById("answerLabel").innerText = answer;
+          const jsonResponse = await response.json();
+
+          if (jsonResponse && jsonResponse.candidates && jsonResponse.candidates.length > 0) {
+            const answerText = jsonResponse.candidates[0].content.parts[0].text;
+            document.getElementById("answerLabel").innerText = answerText;
+          } else {
+            document.getElementById("answerLabel").innerText = "調子が悪いです。。。";
+          }
         } else {
           document.getElementById("answerLabel").innerText = "エラーが発生しました。";
         }
