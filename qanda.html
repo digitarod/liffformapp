@@ -29,15 +29,22 @@
   <label id="answerLabel">回答がここに表示されます</label>
 
   <script>
-    async function submitQuestion() {
-      const question = document.getElementById("question").value;
-      const response = await fetch('YOUR_GAS_WEB_APP_URL', {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question })
-      });
-      const answer = await response.text();
+    function submitQuestion() {
+      const question = document.getElementById("question").value.trim();
+      let answer;
+
+      // 質問に対する回答を生成するロジック
+      if (question === 'こんにちは') {
+        answer = 'こんにちは！何かお手伝いできることはありますか？';
+      } else if (question === '今日の天気は？') {
+        answer = '今日は晴れです！';
+      } else if (question === '') {
+        answer = '質問を入力してください。';
+      } else {
+        answer = '質問を受け付けましたが、回答を生成できませんでした。';
+      }
+
+      // 回答を表示
       document.getElementById("answerLabel").innerText = answer;
     }
   </script>
