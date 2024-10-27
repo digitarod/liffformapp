@@ -10,7 +10,7 @@
             const responseDisplay = document.getElementById("response");
 
             if (!question.trim()) {
-                responseDisplay.textContent = "質問を入力してください。";
+                responseDisplay.textContent = "家族構成・収入・支出明細・貯蓄額・住宅計画等。";
                 return;
             }
 
@@ -35,7 +35,7 @@
 </head>
 <body>
     <h2>FPの窓口に質問</h2>
-    <label for="question">質問を入力してください:</label><br>
+    <label for="question">条件を記載してください:</label><br>
     <textarea id="question" rows="4" cols="50" required></textarea><br><br>
     <button onclick="sendQuestion()">送信</button>
 
