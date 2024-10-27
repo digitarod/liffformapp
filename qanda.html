@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>質問フォーム</title>
+  <title>質問フォーム - Gemini対応</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,23 +29,45 @@
   <label id="answerLabel">回答がここに表示されます</label>
 
   <script>
-    function submitQuestion() {
+    async function submitQuestion() {
       const question = document.getElementById("question").value.trim();
-      let answer;
-
-      // 質問に対する回答を生成するロジック
-      if (question === 'こんにちは') {
-        answer = 'こんにちは！何かお手伝いできることはありますか？';
-      } else if (question === '今日の天気は？') {
-        answer = '今日は晴れです！';
-      } else if (question === '') {
-        answer = '質問を入力してください。';
-      } else {
-        answer = '質問を受け付けましたが、回答を生成できませんでした。';
+      if (!question) {
+        document.getElementById("answerLabel").innerText = "質問を入力してください。";
+        return;
       }
 
-      // 回答を表示
-      document.getElementById("answerLabel").innerText = answer;
+      const apiKey = "AIzaSyCnDAcNNFww_JVe-UZLCukIe2LXOSsDL7U"; // ここにGoogle GeminiのAPIキーを入力してください
+      const apiUrl = "https://api.google.com/gemini/v1/ask"; // 実際のGemini APIのエンドポイントに置き換えてください
+
+      // APIリクエストの構築
+      const requestData = {
+        prompt: question,
+        max_tokens: 100  // 回答のトークン数を指定します。必要に応じて調整してください。
+      };
+
+      // APIへのリクエストを送信
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify(requestData)
+        });
+
+        // レスポンスの解析
+        if (response.ok) {
+          const data = await response.json();
+          const answer = data.choices[0].message || "回答を取得できませんでした。";
+          document.getElementById("answerLabel").innerText = answer;
+        } else {
+          document.getElementById("answerLabel").innerText = "エラーが発生しました。";
+        }
+      } catch (error) {
+        console.error("APIリクエストエラー:", error);
+        document.getElementById("answerLabel").innerText = "エラーが発生しました。";
+      }
     }
   </script>
 </body>
